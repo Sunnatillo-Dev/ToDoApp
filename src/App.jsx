@@ -14,6 +14,7 @@ import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 function App() {
   useEffect(() => {
+    localStorage.setItem("chakra-ui-color-mode", JSON.stringify("dark"));
     JSON.parse(localStorage.getItem("Task"))
       ? JSON.parse(localStorage.getItem("Task"))
       : [];
@@ -65,7 +66,6 @@ function App() {
         align="stretch"
         bgColor="gray.800"
         color="white"
-       
       >
         <Heading mb={4}>Todo App</Heading>
         <Box display={"flex"} alignItems={"center"} gap={"20px"}>
