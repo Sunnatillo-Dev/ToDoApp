@@ -65,6 +65,7 @@ function App() {
         align="stretch"
         bgColor="gray.800"
         color="white"
+       
       >
         <Heading mb={4}>Todo App</Heading>
         <Box display={"flex"} alignItems={"center"} gap={"20px"}>
