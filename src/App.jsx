@@ -14,7 +14,9 @@ import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 function App() {
   useEffect(() => {
-    localStorage.setItem("Task", JSON.stringify([]));
+    JSON.parse(localStorage.getItem("Task"))
+      ? JSON.parse(localStorage.getItem("Task"))
+      : [];
   }, []);
   let [tasks, setTasks] = useState(() => {
     let storedTasks = JSON.parse(localStorage.getItem("Task")) || [];
@@ -89,7 +91,7 @@ function App() {
         </Box>
         <Spacer />
         <VStack width={"100%"} align="stretch" spacing={4}>
-          {JSON.parse(localStorage.getItem("Task")).map((task, index) => (
+          {tasks.map((task, index) => (
             <Box
               key={index}
               borderWidth="1px"
