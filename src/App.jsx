@@ -13,6 +13,7 @@ import {
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 function App() {
+  localStorage.setItem("Task", JSON.stringify([]));
   let [tasks, setTasks] = useState(() => {
     let storedTasks = JSON.parse(localStorage.getItem("Task")) || [];
     return storedTasks;
@@ -29,13 +30,10 @@ function App() {
   };
 
   let deleteTask = (task) => {
-    // Find the index of the first occurrence of the task
     const index = tasks.indexOf(task);
-    // If the task is found, remove it from the array
     if (index !== -1) {
       let updatedTasks = [...tasks];
       updatedTasks.splice(index, 1);
-      // Update the state and local storage with the updated array of tasks
       setTasks(updatedTasks);
       localStorage.setItem("Task", JSON.stringify(updatedTasks));
     }
