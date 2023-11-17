@@ -13,7 +13,9 @@ import {
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 function App() {
-  localStorage.setItem("Task", JSON.stringify([]));
+  useEffect(() => {
+    localStorage.setItem("Task", JSON.stringify([]));
+  }, []);
   let [tasks, setTasks] = useState(() => {
     let storedTasks = JSON.parse(localStorage.getItem("Task")) || [];
     return storedTasks;
