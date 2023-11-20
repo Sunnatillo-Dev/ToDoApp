@@ -125,7 +125,11 @@ function App() {
                 <Input
                   value={task}
                   onChange={(e) => handleEditChange(index, e)}
-                  onKeyUp={(e) => handleEditKeyUp(index, e)}
+                  onKeyUp={(e) =>
+                    !e.target.value && e.key == "Enter"
+                      ? deleteTask(task)
+                      : handleEditKeyUp(index, e)
+                  }
                   width={"90%"}
                   variant="filled"
                   bgColor="gray.700"
