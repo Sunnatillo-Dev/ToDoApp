@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
+import React from "react"
 import {
   ChakraProvider,
   Box,
@@ -9,49 +10,65 @@ import {
   Heading,
   IconButton,
   Text,
-} from "@chakra-ui/react";
-import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
-
+  Flex,
+} from "@chakra-ui/react"
+import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons"
 function App() {
+  let [tasks, setTasks] = useState(() => {
+    let storedTasks = JSON.parse(localStorage.getItem("Task")) || []
+    return storedTasks
+  })
+  let [newTask, setNewTask] = useState("")
+  let [editingIndex, setEditingIndex] = useState(-1)
+
   useEffect(() => {
-    localStorage.setItem("chakra-ui-color-mode", JSON.stringify("dark"));
+    localStorage.setItem("chakra-ui-color-mode", JSON.stringify("dark"))
     JSON.parse(localStorage.getItem("Task"))
       ? JSON.parse(localStorage.getItem("Task"))
-      : [];
-  }, []);
-  let [tasks, setTasks] = useState(() => {
-    let storedTasks = JSON.parse(localStorage.getItem("Task")) || [];
-    return storedTasks;
-  });
-  let [newTask, setNewTask] = useState("");
+      : []
+  }, [])
 
   let addTask = () => {
     if (newTask.trim() !== "") {
-      let updatedTasks = [...tasks, newTask];
-      setTasks(updatedTasks);
-      localStorage.setItem("Task", JSON.stringify(updatedTasks));
-      setNewTask("");
+      let updatedTasks = [...tasks, newTask]
+      setTasks(updatedTasks)
+      localStorage.setItem("Task", JSON.stringify(updatedTasks))
+      setNewTask("")
     }
-  };
+  }
 
   let deleteTask = (task) => {
-    const index = tasks.indexOf(task);
+    let index = tasks.indexOf(task)
     if (index !== -1) {
-      let updatedTasks = [...tasks];
-      updatedTasks.splice(index, 1);
-      setTasks(updatedTasks);
-      localStorage.setItem("Task", JSON.stringify(updatedTasks));
+      let updatedTasks = [...tasks]
+      updatedTasks.splice(index, 1)
+      setTasks(updatedTasks)
+      localStorage.setItem("Task", JSON.stringify(updatedTasks))
     }
-  };
+  }
 
-  useEffect(() => {
-    let storedTasks = JSON.parse(localStorage.getItem("Task")) || [];
-    if (!arraysEqual(tasks, storedTasks)) {
-      setTasks(storedTasks);
+  let editTask = (index) => {
+    setEditingIndex(index)
+  }
+
+  let updateTask = (index, updatedTask) => {
+    let updatedTasks = [...tasks]
+    updatedTasks[index] = updatedTask
+    setTasks(updatedTasks)
+    localStorage.setItem("Task", JSON.stringify(updatedTasks))
+    setEditingIndex(-1)
+  }
+
+  let handleEditChange = (index, e) => {
+    let updatedTasks = [...tasks]
+    updatedTasks[index] = e.target.value
+    setTasks(updatedTasks)
+  }
+
+  let handleEditKeyUp = (index, e) => {
+    if (e.key === "Enter") {
+      updateTask(index, e.target.value)
     }
-  }, [tasks]);
-  function arraysEqual(arr1, arr2) {
-    return JSON.stringify(arr1) === JSON.stringify(arr2);
   }
 
   return (
@@ -78,7 +95,7 @@ function App() {
             bgColor="gray.700"
             color="white"
             onKeyUp={(e) => {
-              e.key == "Enter" ? addTask() : "";
+              e.key === "Enter" ? addTask() : ""
             }}
           />
           <Button
@@ -104,21 +121,38 @@ function App() {
               width={"100%"}
               display={"flex"}
             >
-              <Text width={"90%"}>
-                {JSON.parse(localStorage.getItem("Task"))[index]}
-              </Text>
+              {editingIndex === index ? (
+                <Input
+                  value={task}
+                  onChange={(e) => handleEditChange(index, e)}
+                  onKeyUp={(e) => handleEditKeyUp(index, e)}
+                  width={"90%"}
+                  variant="filled"
+                  bgColor="gray.700"
+                  color="white"
+                />
+              ) : (
+                <Text width={"520px"}>{task}</Text>
+              )}
               <Spacer />
-              <IconButton
-                icon={<DeleteIcon />}
-                colorScheme="red"
-                onClick={() => deleteTask(task)}
-              />
+              <Flex gap={"15px"}>
+                <IconButton
+                  icon={<DeleteIcon />}
+                  colorScheme="red"
+                  onClick={() => deleteTask(task)}
+                />
+                <IconButton
+                  icon={<EditIcon />}
+                  colorScheme="teal"
+                  onClick={() => editTask(index)}
+                />
+              </Flex>
             </Box>
           ))}
         </VStack>
       </VStack>
     </ChakraProvider>
-  );
+  )
 }
 
-export default App;
+export default App
